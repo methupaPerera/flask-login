@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for color, message in messages %}
+            <div class="alert alert-{{ color }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close focus-ring focus-ring-{{ color }}" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<h4>Hello {{ user }}, welcome to the login system.</h4>
+
+{% endblock %}
