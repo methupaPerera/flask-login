@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
+from .utils import validate_signup
+
 from . import db
 from .models import User
 
@@ -24,21 +26,28 @@ def sign_up():
         
         # Id values are validated, the user will be redirected to home, sign up otherwise.
         if state:
+            # Checks if a user is already logged with the email.
             found_user = User.query.filter_by(email=email).first()
 
+            # Creates a new user account if the email is new.
             if found_user:
                 flash("The email you entered is already exists.", "danger")
                 flash("Failed to create the account.", "danger")
+
                 return render_template("auth/sign-up.html")
             else:
-                new_user = User(full_name, email, password)
+                new_user = User(full_name, email)
+                new_user.set_password(password)
+
                 db.session.add(new_user)
                 db.session.commit()
 
+                # Adding the user name to the session.
                 session.permanent = True
                 session["user"] = full_name
 
                 flash("Your account has been created successfully.", "success")
+
                 return redirect(url_for("views_bp.home"))
 
         else:
@@ -54,17 +63,22 @@ def log_in():
         flash("Please logout before login into another account.", "warning")
         return redirect(url_for("views_bp.home"))
     
+    # Handles the login.
     if request.method == "POST":
+        # Gets all the information from the form and removes the extra spaces.
         email = request.form.get("email").strip()
         password = request.form.get("password").strip()
 
+        # Checks if a user exists with the email entered.
         found_user = User.query.filter_by(email=email).first()
 
+        # Checks for the password if the user exists.
         if found_user:
-            if found_user.password != password:
+            if not found_user.check_password(password):
                 flash("Incorrect password.", "danger")
                 return render_template("auth/log-in.html")
             else:
+                # Adding user name to the session.
                 session.permanent = True
                 session["user"] = found_user.full_name
 
@@ -79,6 +93,7 @@ def log_in():
 
 @auth_bp.route("/log-out", methods=["GET", "POST"])
 def log_out():
+    # Removes the user from the session.
     if "user" in session:
         user = session["user"]
         session.pop("user")
@@ -87,28 +102,4 @@ def log_out():
         flash("Please log in.", "warning")
         
     return redirect(url_for("auth_bp.log_in"))
-        
-# Utilities #############################################
-
-def validate_signup(full_name, email, password, confirm_password) -> bool:
-    """
-    @params: full_name, email, password, confirm_password
-    @returns: True if successful, False otherwise
-    """
-
-    state = True
-
-    if len(full_name) < 2 or len(email) < 11:
-        flash("Please provide valid information.", "danger")
-        state = False
-
-    if len(password) < 8:
-        flash("Password must be at least 8 characters.", "danger")
-        state = False
-
-    if password != confirm_password or password == "" or confirm_password == "":
-        flash("Please check your passwords.", "danger")
-        state = False
-
-    return state
 
