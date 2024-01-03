@@ -4,8 +4,17 @@ from .models import User
 
 def validate_signup(full_name, email, password, confirm_password) -> bool:
     """
-    @params: full_name, email, password, confirm_password
-    @returns: True if successful, False otherwise
+    Requirements:
+        Users full name
+        Email
+        Password
+        Password confirmation
+
+    Task:
+        Validating the sign up details.
+    
+    Returns:
+        Validation status
     """
 
     state = True
@@ -42,9 +51,9 @@ def validate_signup(full_name, email, password, confirm_password) -> bool:
 
 def check_password_strength(password):
     # Define regular expressions for numbers, characters, and symbols
-    contains_number = bool(re.search(r'\d', password))  # Check for at least one digit
-    contains_char = bool(re.search(r'[a-zA-Z]', password))  # Check for at least one character
-    contains_symbol = bool(re.search(r'[\W_]', password))  # Check for at least one symbol
+    contains_number = bool(re.search(r"\d", password))  # Check for at least one digit
+    contains_char = bool(re.search(r"[a-zA-Z]", password))  # Check for at least one character
+    contains_symbol = bool(re.search(r"[\W_]", password))  # Check for at least one symbol
 
     # Check if all criteria are met.
     if contains_number and contains_char and contains_symbol:
@@ -54,7 +63,7 @@ def check_password_strength(password):
     
 def validate_email(email):
     # Define the regular expression pattern for a valid email.
-    pattern = r'^[a-zA-Z0-9._+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+    pattern = r"^[a-zA-Z0-9._+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
 
     # Check if the email matches the pattern.
     if re.match(pattern, email):
@@ -64,7 +73,7 @@ def validate_email(email):
 
 def validate_name(input_string):
     # Define the regular expression pattern for letters only.
-    pattern = r'^[a-zA-Z]+$'
+    pattern = r"^[a-zA-Z]+$"
 
     # Check if the input string matches the pattern.
     if re.match(pattern, input_string):

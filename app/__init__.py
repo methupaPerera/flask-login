@@ -1,10 +1,11 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
+from uuid import uuid4
 
 db = SQLAlchemy() # Creating SQLAlchemy instance.
 DB_NAME = "users.sqlite3" # Database name.
-SECRET_KEY = "secret" # Secret key for authentication.
+SECRET_KEY = uuid4().hex # Secret key generated with uuid for authentication.
 
 def create_app():
     app = Flask(__name__)
@@ -27,7 +28,7 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix="/")
     
     # Creating database.
-    #with app.app_context():
-     #   db.create_all()
+    with app.app_context():
+       db.create_all()
 
     return app # Returning the created flask app instance.
