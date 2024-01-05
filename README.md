@@ -4,6 +4,20 @@ This repository contains an example login system built using Flask and SQLAlchem
 
 🌟 Don't forget to star ⭐ this repository if you find it helpful! 🌟
 
+## ▶️ How to run the app
+- Clone the repository.
+```
+git clone https://github.com/methupaPerera/flask-login.git
+```
+- Install the necessary packages.
+```
+pip install -r requirements.txt
+```
+- Run the app.
+```
+python main.py
+```
+
 ## 📁 File Structure
 
 The project is structured as follows:
